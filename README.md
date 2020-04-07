@@ -4,7 +4,7 @@ Git clone/download and run
 ```
 $ npm install
 ```
-To Run locally:
+To run locally:
 ```
-$ node index.js
+$ nodemon index.js
 ```
