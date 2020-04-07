@@ -11,7 +11,8 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-
+// variabls
+var totalVisitor = 0
 
 // io connection:
 io.on('connection', function (socket) {
@@ -20,8 +21,9 @@ io.on('connection', function (socket) {
 
     // disconenct
     socket.on('disconnect', function () {
-        var farewell = ['feeling inspired.', "It's pouring outside, "]
-        io.emit('disconnect', handshake.headers.host + ' left the show, ')
+        var farewell = ['feeling inspired.', "still thinking about the last piece he saw."]
+        io.emit('disconnect', `${handshake.headers.host} left the show, ${pickRand(farewell)}`)
+        subUser();
     });
 
     // connect
@@ -29,7 +31,27 @@ io.on('connection', function (socket) {
         console.log(msg)
         io.emit('join', msg[0] + str + msg[1]);
     });
+
+    //calculate user
+    addUser();
+    socket.emit('count', { connections: totalVisitor });
 });
+
+// some methods:
+function addUser() {
+    totalVisitor++;
+}
+
+function subUser() {
+    totalVisitor--;
+}
+
+function pickRand(li) {
+    var picked = li[Math.floor(Math.random() * li.length)]
+    return picked
+}
+
+
 
 
 

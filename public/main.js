@@ -1,6 +1,6 @@
 var socket = io();
 var openning = ['Look! ', "It's pouring outside, "]
-var ending = [' walked in to the space.', ' showed up at the MFA Design and Technology Thesis show.']
+var ending = [' walked in to the space.', ' heard about the event and came to the show.', ' showed up at the MFA Design and Technology Thesis show.']
 
 function pickCombo(a, b) {
     var a_word = a[Math.floor(Math.random() * a.length)]
@@ -19,4 +19,10 @@ socket.on('join', function (msg) {
 socket.on('disconnect', function (msg) {
     $('#messages').append($('<span>').text(msg));
 });
+
+socket.on('count', function (msg) {
+    var count_msg = `Currently, there are ${msg.connections} people in the exhibition.`
+    $('#messages').append($('<span>').text(count_msg));
+});
+
 
