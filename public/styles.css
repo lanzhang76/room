@@ -1,0 +1,19 @@
+* {
+    margin: 10px;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font: 20px Helvetica, Arial;
+    line-height: 1.5;
+}
+
+.bulletin_board {
+    background-color: aliceblue;
+    
+}
+
+.bulletin_board span{
+    margin-left:0;
+}
