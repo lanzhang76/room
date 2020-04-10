@@ -37,6 +37,8 @@ io.on('connection', function (socket) {
     socket.emit('count', { connections: totalVisitor });
 });
 
+
+
 // some methods:
 function addUser() {
     totalVisitor++;
@@ -56,6 +58,7 @@ function pickRand(li) {
 
 
 // server listens on:
-http.listen(3000, function () {
+var port = process.env.PORT || 5000;
+http.listen(port, function () {
     console.log('listening on *:3000');
 });
