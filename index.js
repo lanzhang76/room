@@ -6,16 +6,19 @@ var io = require('socket.io')(http);
 // static files: css,js
 app.use(express.static('public'))
 
-// route to default page
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
-});
-
-var projs = ['Project A', "Project B", "Project X", "Project D", "Project E", "Project F"]
+var projs = ['Project A', "Project B", "Project X", "Project D", 
+             "Project E", "Project F", "Project N", "Project FDF", 
+             "Project Y", "Project N", "Project R", "Project FG", 
+             "Project P", "Project G", "Project E", "Project SD"]
 
 app.get('/projs', function (req, res) {
     res.send(projs)
 })
+
+// route to default page
+app.get('*', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
+});
 
 // variabls
 var totalVisitor = 0
@@ -41,6 +44,10 @@ io.on('connection', function (socket) {
 
     socket.on('check', function (msg) {
         io.emit('check', handshake.headers.host + handshake.address + " is checking " + msg.name + ".");
+    });
+
+    socket.on('hall', function () {
+        io.emit('hall', handshake.headers.host + handshake.address + " is back to the exhibition hall.");
     });
 
     //calculate user
