@@ -24,20 +24,19 @@ io.on('connection', function (socket) {
         var farewell = ['feeling inspired.', "still thinking about the last piece he saw."]
         io.emit('disconnect', `${handshake.headers.host} left the show, ${pickRand(farewell)}`)
         subUser();
+        io.emit('count', { connections: totalVisitor });
     });
 
     // connect
     socket.on('join', function (msg) {
-        console.log(msg)
         io.emit('join', msg[0] + str + msg[1]);
+        io.emit('count', { connections: totalVisitor });
     });
 
     //calculate user
     addUser();
     socket.emit('count', { connections: totalVisitor });
 });
-
-
 
 // some methods:
 function addUser() {

@@ -8,21 +8,44 @@ function pickCombo(a, b) {
     return [a_word, b_word]
 }
 
+var isChatting = false;
+$('#chatbutton').click(function(){
+    isChatting = !isChatting;
+    if(isChatting){
+        $('#chatbutton').text("Close Chat");
+        $('.messages-container').addClass('open');
+        scrollToBottom(600);
+    }else{
+        $('#chatbutton').text("Open Chat");
+        $('.messages-container').removeClass('open');
+    }
+})
+
 // when connects, emits to the server the random combination 
 // updates on all clients' interface
 socket.emit('join', pickCombo(openning, ending));
 socket.on('join', function (msg) {
     $('#messages').append($('<span>').text(msg));
+    scrollToBottom(600);
 });
 
 // receive disconenction message from the server then displays it
 socket.on('disconnect', function (msg) {
     $('#messages').append($('<span>').text(msg));
+    scrollToBottom(600);
 });
 
 socket.on('count', function (msg) {
-    var count_msg = `Currently, there are ${msg.connections} people in the exhibition.`
-    $('#messages').append($('<span>').text(count_msg));
+    var count_msg = `Currently, there ${getBe(msg.connections)} ${msg.connections} people in the exhibition.`
+    $('#people').text(count_msg);
 });
+
+function scrollToBottom(time){
+    $("#messages").animate({ scrollTop: $("#messages").prop('scrollHeight') }, time, 'linear');
+}
+
+function getBe(number){
+    return number > 1 ? 'are' : 'is';
+}
 
 

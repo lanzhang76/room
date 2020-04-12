@@ -1,18 +1,23 @@
 <html>
 
 <head>
-    <title>Socket.IO chat</title>
+    <title>A Thesis Show Website</title>
     <link rel="stylesheet" href="/styles.css">
     <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script> -->
     <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
-    <div class="bulletin_board">
-        <p id="messages"></p>
+    <h1>A Thesis Show Website.</h1>
+    <div id="bulletin_board">
+        <p id="people"></p>
+        <p id="chatbutton">Open Chat</p>
+        <div class="messages-container">
+            <div id="messages"></div>
+        </div>
     </div>
 
-    <canvas id="canvas" width="2000" height="1000"></canvas>
+    <!-- <canvas id="canvas" width="2000" height="1000"></canvas> -->
 
 
     <script src="js/jquery.js"></script>
