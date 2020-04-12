@@ -9,6 +9,18 @@ body {
     line-height: 1.5;
 }
 
+#proj-container {
+    position: absolute;
+    width: 100%;
+}
+
+.proj {
+    position: relative;
+    width: 30%;
+    height: 200px;
+    background-color: yellow;
+}
+
 #bulletin_board {
     position: fixed;
     bottom: 0px;
