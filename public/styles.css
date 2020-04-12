@@ -11,13 +11,20 @@ body {
 
 #proj-container {
     position: absolute;
-    width: 100%;
+    width: 90%;
+    margin: 0 auto;
+    top: 100px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    text-align: center;
 }
 
 .proj {
     position: relative;
-    width: 30%;
-    height: 200px;
+    display: inline-block;
+    width: 200px;
+    height: 150px;
+    margin: 10px;
     background-color: yellow;
 }
 
@@ -30,15 +37,8 @@ body {
 
 #bulletin_board p{
     color: white;
-    display: inline-block;
-}
-
-#chatbutton {
-    position: absolute;
-    right: 0;
-    margin-right: 10px;
     cursor: pointer;
-    user-select: none;
+    margin-left: 10px;
 }
 
 .messages-container{
@@ -70,5 +70,5 @@ body {
 
 #messages span{
     display: block;
-    margin-left: 0;
+    margin-left: 10px;
 }

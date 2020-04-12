@@ -42,6 +42,10 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/about', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
+});
+
 
 io.sockets.on('connection', function (socket) {
     let handshake = socket.handshake;

@@ -2,6 +2,23 @@ var socket = io();
 var openning = ['Look! ', "It's pouring outside, "]
 var ending = [' walked in to the space.', ' heard about the event and came to the show.', ' showed up at the MFA Design and Technology Thesis show.']
 
+
+$(document).ready(function() {
+    $.ajax({
+        url: window.location + "projs",
+        type: "GET",
+        success: function(data){
+            data.forEach(element => {
+                var proj = $('<div>').addClass('proj').text(element).attr("id",element.replace(/\s/g , "-"));
+                $('#proj-container').append(proj);
+                proj.click(function(){
+                    socket.emit('check', {name: element});
+                })
+            });
+        }
+    });
+});
+
 function pickCombo(a, b) {
     var a_word = a[Math.floor(Math.random() * a.length)]
     var b_word = b[Math.floor(Math.random() * b.length)]
@@ -9,14 +26,12 @@ function pickCombo(a, b) {
 }
 
 var isChatting = false;
-$('#chatbutton').click(function(){
+$('#people').click(function(){
     isChatting = !isChatting;
     if(isChatting){
-        $('#chatbutton').text("Close Chat");
         $('.messages-container').addClass('open');
         scrollToBottom(600);
     }else{
-        $('#chatbutton').text("Open Chat");
         $('.messages-container').removeClass('open');
     }
 })
@@ -31,6 +46,11 @@ socket.on('join', function (msg) {
 
 // receive disconenction message from the server then displays it
 socket.on('disconnect', function (msg) {
+    $('#messages').append($('<span>').text(msg));
+    scrollToBottom(600);
+});
+
+socket.on('check', function (msg) {
     $('#messages').append($('<span>').text(msg));
     scrollToBottom(600);
 });
