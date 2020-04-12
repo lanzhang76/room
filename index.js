@@ -11,30 +11,49 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-// variabls
+
+// server listens on:
+var port = process.env.PORT || 5000;
+http.listen(port, function () {
+    console.log('listening on *:5000');
+});
+
+
+// Global variables
 var totalVisitor = 0
 
 // io connection:
 io.on('connection', function (socket) {
-    let handshake = socket.handshake;
-    var str = handshake.headers.host + handshake.address + " on " + handshake.time;
+    console.log('a user connected: ' + socket.id);
 
-    // disconenct
-    socket.on('disconnect', function () {
-        var farewell = ['feeling inspired.', "still thinking about the last piece he saw."]
-        io.emit('disconnect', `${handshake.headers.host} left the show, ${pickRand(farewell)}`)
-        subUser();
-    });
+    let handshake = socket.handshake;
+    const user = {
+        unique_name: "Anonymous " + getsUniqueId(),
+        time: handshake.time,
+        id: socket.id,
+        ip: handshake.headers.host + " " + handshake.address,
+        open_sen: '',
+        end_sen: '',
+        goodbye: goodBye()
+    }
 
     // connect
-    socket.on('join', function (msg) {
-        console.log(msg)
-        io.emit('join', msg[0] + str + msg[1]);
+    socket.on('join', function (data) {
+        user.open_sen = data[0]
+        user.end_sen = data[1]
+        io.emit('join', user);
     });
 
     //calculate user
     addUser();
     socket.emit('count', { connections: totalVisitor });
+
+    // disconenct
+    socket.on('disconnect', function () {
+        io.emit('disconnect', `${user.unique_name} left the show, ${user.goodbye}`)
+        subUser();
+    });
+
 });
 
 
@@ -53,12 +72,17 @@ function pickRand(li) {
     return picked
 }
 
+// unique name generator
+function getsUniqueId() {
+    var names = "Alligator, Anteater, Armadillo, Auroch, Axolotl, Badger, Bat, Bear, Beaver, Blobfish, Buffalo, Camel, Chameleon, Cheetah, Chipmunk, Chinchilla, Chupacabra"
+    var name_list = names.split(", ")
+    return pickRand(name_list)
+}
+
+function goodBye() {
+    var farewell = ['feeling inspired.', "still thinking about the last piece he saw."]
+    return pickRand(farewell)
+}
 
 
 
-
-// server listens on:
-var port = process.env.PORT || 5000;
-http.listen(port, function () {
-    console.log('listening on *:5000');
-});

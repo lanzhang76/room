@@ -10,10 +10,18 @@ body {
 }
 
 .bulletin_board {
+    display: none;
     background-color: aliceblue;
     
 }
 
 .bulletin_board span{
     margin-left:0;
+}
+
+.consent button{
+    padding: 8px;
+    background:none;
+    border: 1px solid grey;
+    border-radius: 1px;
 }
