@@ -1,0 +1,64 @@
+@font-face {
+    font-family: 'GT American';
+    src: url('/GT\ America/GT-America-Expanded-Black.eot');
+    src: url('/GT\ America/GT America/GT-America-Expanded-Black.woff') format('woff'), 
+        url('/GT\ America/GT America/GT-America-Expanded-Black.woff2') format('woff2'), 
+        url('/GT\ America/GT America/GT-America-Expanded-Black') format('truetype'),
+}
+  
+  
+* {
+    margin: 0px;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:20px;
+    line-height: 1.5;
+}
+
+span{
+    margin: 10px;
+}
+.bulletin_board {
+    display: none;
+    padding: 15px;
+    background-color:rgba(0,0,0,0.3);
+    color: white;
+    margin: 50px;
+    border-radius: 5px;
+}
+
+.bulletin_board span{
+    margin-left:0;
+}
+
+.icon button{
+    padding: 8px;
+    background:none;
+    color: white;
+    border: 1px solid white;
+    border-radius: 3px;
+    outline:none
+}
+
+.icon{
+    position: fixed;
+    right: 60px;
+    bottom: 50px;
+}
+
+#book_hide{
+    display: none;
+}
+
+#backdrop img{
+    position: fixed;
+    z-index: -1;
+    left:0;
+    top:0;
+    width: 100%;
+    height: auto;
+}

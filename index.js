@@ -21,10 +21,12 @@ http.listen(port, function () {
 
 // Global variables
 var totalVisitor = 0
+var currentVisitors = []
 
 // io connection:
 io.on('connection', function (socket) {
     console.log('a user connected: ' + socket.id);
+    console.log(totalVisitor)
 
     let handshake = socket.handshake;
     const user = {
@@ -37,20 +39,20 @@ io.on('connection', function (socket) {
         goodbye: goodBye()
     }
 
-    // connect
+
+    // connect + update users
     socket.on('join', function (data) {
+        addUser();
         user.open_sen = data[0]
         user.end_sen = data[1]
-        io.emit('join', user);
+        console.log(totalVisitor)
+        io.sockets.emit('update', { user: user, connections: totalVisitor });
     });
 
-    //calculate user
-    addUser();
-    socket.emit('count', { connections: totalVisitor });
 
     // disconenct
     socket.on('disconnect', function () {
-        io.emit('disconnect', `${user.unique_name} left the show, ${user.goodbye}`)
+        io.sockets.emit('disconnect', `${user.unique_name} left the show, ${user.goodbye}`)
         subUser();
     });
 
@@ -61,6 +63,7 @@ io.on('connection', function (socket) {
 // some methods:
 function addUser() {
     totalVisitor++;
+    console.log(totalVisitor)
 }
 
 function subUser() {
