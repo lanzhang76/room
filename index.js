@@ -69,6 +69,9 @@ io.on('connection', function (socket) {
     });
 
     // ping timerout
+    socket.on('ping', () => {
+        io.sockets.emit('p', `sleeping!`);
+    });
 
 });
 

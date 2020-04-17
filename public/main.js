@@ -30,7 +30,7 @@ function showBook() {
     socket.on('update', function (msg) {
         var sen = "on " + msg.user.time;
         $('#messages').append($('<span>').text(msg.user.open_sen));
-        $('#messages').append($('<span style="color:blue">').text(msg.user.unique_name));
+        $('#messages').append($('<span style="color:royalblue">').text(msg.user.unique_name));
         $('#messages').append($('<span>').text(sen));
         $('#messages').append($('<span>').text(msg.user.end_sen));
         $('#messages').append($('<span>').text(countCheck(msg.connections)));
@@ -43,7 +43,7 @@ function showBook() {
     });
 
     socket.on('pong', (latency) => {
-        $('#messages').append($('<span>').text("oops"));
+        $('#messages').append($('<span>').text("The server is falling asleep as no one is watching."));
     });
 
 

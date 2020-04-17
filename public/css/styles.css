@@ -25,7 +25,7 @@ span{
 .bulletin_board {
     display: none;
     padding: 15px;
-    background-color:rgba(0,0,0,0.3);
+    background-color:rgba(0,0,0,1.0);
     color: white;
     margin: 50px;
     border-radius: 5px;
@@ -37,7 +37,7 @@ span{
 
 .icon button{
     padding: 8px;
-    background:none;
+    background:black;
     color: white;
     border: 1px solid white;
     border-radius: 3px;
