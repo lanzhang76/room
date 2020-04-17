@@ -1,7 +1,10 @@
 var express = require('express');
 var app = require('express')();
 var http = require('http').createServer(app);
-var io = require('socket.io')(http);
+var io = require('socket.io')(http, {
+    pingInterval: 600000, // server check if it's resting after 10 mins
+    pingTimeout: 60000 // server rests after 1 minute of no activity
+});
 // components:
 var getID = require('./components/uniqueID');
 var goodbye = require('./components/goodbye');
@@ -70,6 +73,7 @@ io.on('connection', function (socket) {
 
     // ping timerout
     socket.on('ping', () => {
+        console.log("server is sleeping")
         io.sockets.emit('p', `sleeping!`);
     });
 
