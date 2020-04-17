@@ -42,6 +42,11 @@ function showBook() {
         $('#messages').append($('<span>').text(msg));
     });
 
+    socket.on('pong', (latency) => {
+        $('#messages').append($('<span>').text("oops"));
+    });
+
+
 
     // functions:
     function pickCombo(a, b) {
