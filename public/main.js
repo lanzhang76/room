@@ -1,4 +1,5 @@
-var socket = io();
+var socket = io().connect('http://localhost:5000/');
+var socket2 = io().connect('http://localhost:5000/admin');
 
 // variables:
 var openning = ['Look!', "It's pouring outside,"]
@@ -68,3 +69,7 @@ function showBook() {
     }
 
 }
+
+socket.on("connect", () => {
+    console.log(`${socket.id} + "regular"`)
+})

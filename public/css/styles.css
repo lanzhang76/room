@@ -20,15 +20,15 @@ body {
 }
 
 span{
-    margin: 10px;
+    margin: 0px;
 }
+
 .bulletin_board {
     display: none;
     padding: 15px;
     background-color:rgba(0,0,0,1.0);
     color: white;
-    margin: 50px;
-    border-radius: 5px;
+    margin: 30px;
 }
 
 .bulletin_board span{
@@ -61,4 +61,30 @@ span{
     top:0;
     width: 100%;
     height: auto;
+}
+
+#intro {
+    font-size: 0.8em;
+}
+
+/* admin module */
+#guestbook-admin{
+    display: none;
+    position: absolute;
+    top:20px;
+    left: 20px;
+    background:white;
+    padding: 10px;
+    outline: none;
+}
+
+#admin-msg{
+    box-sizing: border-box;
+    outline: none;
+}
+
+#admin-buttons button{
+    background: none;
+    padding: 5px;
+    outline: none;
 }

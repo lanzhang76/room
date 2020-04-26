@@ -1,7 +1,7 @@
-var express = require('express');
-var app = require('express')();
-var http = require('http').createServer(app);
-var io = require('socket.io')(http, {
+const express = require('express');
+const app = require('express')();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http, {
     pingInterval: 600000, // server check if it's resting after 10 mins
     pingTimeout: 60000 // server rests after 1 minute of no activity
 });
@@ -29,15 +29,16 @@ http.listen(port, function () {
 var totalVisitor = 0
 var currentVisitors = []
 
-// io connection:
-io.on('connection', function (socket) {
+// reg io connection:
+io.of('/').on('connection', function (socket) {
     console.log('a user connected: ' + socket.id);
 
     // we could also just use io.sockets.clients().length for totalVisitors
 
     var addedUser = false;
-
     let handshake = socket.handshake;
+
+
     const user = {
         // unique_name: "Anonymous " + getsUniqueId(),
         unique_name: getID.getsID(),
@@ -54,9 +55,10 @@ io.on('connection', function (socket) {
     socket.on('join', function (data) {
         if (addedUser) return;
 
-        addUser();
+        addUser(); // user count
         addedUser = true;
-        console.log(`visitors: ${totalVisitor}`)
+
+
         user.open_sen = data[0]
         user.end_sen = data[1]
         io.sockets.emit('update', { user: user, connections: totalVisitor });
@@ -67,7 +69,7 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
         if (addedUser) {
             io.sockets.emit('disconnect', `${user.unique_name} left the show, ${user.goodbye}`)
-            subUser();
+            subUser(); // user count
         }
     });
 
@@ -77,7 +79,14 @@ io.on('connection', function (socket) {
         io.sockets.emit('p', `sleeping!`);
     });
 
+    //admin broadcast
+    socket.on('admin-msg', (data) => {
+        io.sockets.emit('mc', data);
+    })
+
 });
+
+
 
 
 

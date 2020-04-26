@@ -1,4 +1,3 @@
-
 var r = require("./random");
 
 exports.goodbye = () => {
