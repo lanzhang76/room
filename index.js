@@ -8,6 +8,8 @@ const io = require('socket.io')(http, {
 // components:
 var getID = require('./components/uniqueID');
 var goodbye = require('./components/goodbye');
+var content = require('./components/contentMSG');
+var gettime = require('./components/gettime');
 
 // static files: css,js
 app.use(express.static('public'))
@@ -15,6 +17,10 @@ app.use(express.static('public'))
 // route to default page
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/home', function (req, res) {
+    res.sendfile(__dirname + '/public/projects.html');
 });
 
 
@@ -31,23 +37,26 @@ var currentVisitors = []
 
 // reg io connection:
 io.of('/').on('connection', function (socket) {
-    console.log('a user connected: ' + socket.id);
+    // console.log('a user connected: ' + socket.id);
 
     // we could also just use io.sockets.clients().length for totalVisitors
 
     var addedUser = false;
     let handshake = socket.handshake;
-
-
+    // console.log(handshake.url);
+    var date = new Date();
     const user = {
         // unique_name: "Anonymous " + getsUniqueId(),
         unique_name: getID.getsID(),
-        time: handshake.time,
+        time: gettime.getDate(handshake.time),
+        time_hourminute: gettime.getHourMinute(),
+        url: handshake.url,
         id: socket.id,
         ip: handshake.headers.host + " " + handshake.address,
         open_sen: '',
         end_sen: '',
-        goodbye: goodbye.goodbye()
+        goodbye: goodbye.goodbye(),
+        birdOrOwl: gettime.birdOrOwl()
     }
 
 
@@ -58,12 +67,18 @@ io.of('/').on('connection', function (socket) {
         addUser(); // user count
         addedUser = true;
 
-
         user.open_sen = data[0]
         user.end_sen = data[1]
         io.sockets.emit('update', { user: user, connections: totalVisitor });
     });
 
+    // content view
+    socket.on('contentView', (data) => {
+        // parse the sentence function
+        var contentmsg = content.content(user.unique_name, data);
+        console.log(contentmsg.consolemsg)
+        io.sockets.emit('contentBroadcast', contentmsg);
+    })
 
     // disconenct
     socket.on('disconnect', function () {

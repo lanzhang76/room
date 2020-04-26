@@ -1,5 +1,4 @@
 // Detects keydown
-
 var down = { 16: false, 17: false, 68: false, 69: false, 86: false };
 // shift + ctl + dev
 
@@ -25,8 +24,9 @@ $('#admin-button').click((e) => {
 })
 
 $('#admin-exit').click((e) => {
-    $("#admin-msg").val().empty();
+    $("#admin-msg").val('');
     $("#guestbook-admin").hide();
+    console.log("hide")
 })
 
 socket.on('mc', function (msg) {

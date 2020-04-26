@@ -4,6 +4,7 @@
     "description": "test app",
     "dependencies": {
         "express": "^4.17.1",
+        "ordinal-js": "^1.1.0",
         "socket.io": "^2.3.0"
     },
     "engines": {
