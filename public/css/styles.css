@@ -32,7 +32,6 @@ span{
 .bulletin_board {
     width: 100%;
     box-sizing: border-box;
-    display: none;
     width: calc(100%-30px);
     padding: 30px;
     background-color:rgba(0,0,0,1.0);

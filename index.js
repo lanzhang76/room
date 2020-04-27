@@ -7,6 +7,7 @@ const io = require('socket.io')(http, {
 });
 const cookie = require('cookie');
 
+
 // Server Components
 var getID = require('./components/uniqueID');
 var goodbye = require('./components/goodbye');
@@ -32,7 +33,6 @@ app.get('/publication', function (req, res) {
 app.get('/livestream', function (req, res) {
     res.sendfile(__dirname + '/public/mock_subdomains/livestream.html');
 });
-
 
 
 
@@ -64,48 +64,46 @@ io.of('/').on('connection', function (socket) {
         users[usercode] = user.unique_name;
         console.log(`current visitors: ${Object.values(users)}`)
         var totalVisitor = Object.keys(users).length;
-        io.sockets.emit('firstentry', `${users[usercode]} enters the show. ${vcount.totalcount(totalVisitor)}`)
-
+        io.sockets.emit('update', `${users[usercode]} enters the show. ${vcount.totalcount(totalVisitor)}`)
     }
+
 
     // assign rooms based on path
     socket.on('room', function (msg) {
         if (msg == '/projects') {
-            io.sockets.emit('roomAssigned', `${users[usercode]} is on projects page.`)
+            io.sockets.emit('update', `${users[usercode]} is on projects page.`)
         } else if (msg == '/publication') {
-            io.sockets.emit('roomAssigned', `${users[usercode]} is on publication page.`)
+            io.sockets.emit('update', `${users[usercode]} is on publication page.`)
         } else if (msg == '/livestream') {
-            io.sockets.emit('roomAssigned', `${users[usercode]} is watching livestream.`)
+            io.sockets.emit('update', `${users[usercode]} is watching livestream.`)
         } else if (msg == '/') {
-            io.sockets.emit('roomAssigned', `${users[usercode]} is in the main gallery space browsing.`)
+            io.sockets.emit('update', `${users[usercode]} is in the main gallery space browsing.`)
         }
     })
 
     // content view
     socket.on('contentView', (data) => {
-        // parse the sentence function
         var contentmsg = content.content(user.unique_name, data);
-        console.log(contentmsg.consolemsg)
         io.sockets.emit('contentBroadcast', contentmsg);
     })
+
 
     // disconenct
     socket.on('disconnect', function () {
         if (addedUser) {
-            io.sockets.emit('disconnect', `${user.unique_name} left the show, ${user.goodbye}`)
-            subUser(); // user count
+            io.sockets.emit('update', `${user.unique_name} left the show, ${user.goodbye}`)
         }
     });
 
     // ping timerout
     socket.on('ping', () => {
         console.log("server is sleeping")
-        io.sockets.emit('p', `sleeping!`);
+        io.sockets.emit('update', "The server is falling asleep as no one is watching.");
     });
 
     //admin broadcast
     socket.on('admin-msg', (data) => {
-        io.sockets.emit('mc', data);
+        io.sockets.emit('update', data);
     })
 
 });
