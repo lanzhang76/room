@@ -1,4 +1,9 @@
-var socket = io();
+var uuid = localStorage.getItem('uUID');
+if(uuid == null){
+    uuid = Math.random().toString(24) + new Date();
+    localStorage.setItem('uUID', uuid);
+}
+var socket = io({ query: { uuid: uuid } });
 
 socket.emit('room', window.location.pathname);
 
