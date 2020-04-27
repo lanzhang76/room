@@ -23,6 +23,7 @@ span{
     margin: 0px;
 }
 
+/* guestbook */
 .bulletin_board {
     display: none;
     width: calc(100%-30px);
@@ -38,6 +39,11 @@ span{
     margin-left:0;
 }
 
+
+/* guestbook */
+
+
+/* buttons */
 .icon button{
     padding: 8px;
     width: 30px;
@@ -53,11 +59,9 @@ span{
     right: 0px;
     bottom: 0px;
 }
+/* buttons */
 
-#book_hide{
-    /* display: none; */
-}
-
+/* placeholder for background */
 #backdrop img{
     position: fixed;
     z-index: -1;
@@ -70,6 +74,9 @@ span{
 #intro {
     font-size: 0.8em;
 }
+/* placeholder for background */
+
+
 
 
 /* project mockups */
@@ -89,7 +96,7 @@ span{
     text-decoration: none;
     color: white;
 }
-
+/* project mockups */
 
 
 
@@ -116,4 +123,4 @@ span{
     padding: 5px;
     outline: none;
 }
-
+/* admin module */

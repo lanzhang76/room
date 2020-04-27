@@ -1,30 +1,22 @@
-// variables:
-var openning = ['Look!', "It's pouring outside,"]
-var ending = ['walked into the space.', 'heard about the event and came to the show.', ' showed up at the MFA Design and Technology Thesis show.']
-
-
-
+var socket = io();
 $('#book_hide').click(() => {
     $('.bulletin_board').toggle()
     console.log($('#book_hide').val())
     $('#book_hide').html($("#book_hide").html() === "✕" ? "✐" : "✕")
 })
 
+
+//get room based on url
+function assignroom() {
+    socket.emit('room', window.location.pathname);
+    socket.on('roomAssigned', (msg) => {
+        $('#messages').append($('<span>').text(msg));
+    })
+}
+
 // after visitor opts in:
 function showBook() {
     $('.bulletin_board').show();
-    // initialize:
-    // when connects, emits to the server the random combination 
-    socket.emit('join', pickCombo(openning, ending));
-    socket.on('update', function (msg) {
-        var sen = `at ${msg.user.time_hourminute} on ${msg.user.time}`;
-        $('#messages').append($('<span>').text(msg.user.open_sen));
-        $('#messages').append($('<span style="color:royalblue">').text(msg.user.unique_name));
-        $('#messages').append($('<span>').text(sen + ' '));
-        $('#messages').append($('<span>').text(msg.user.birdOrOwl + ' '));
-        $('#messages').append($('<span>').text(msg.user.end_sen + ' '));
-        $('#messages').append($('<span>').text(msg.countmsg));
-    });
 
     // disconnect:
     // receive disconenction message from the server then displays it
@@ -46,4 +38,5 @@ function showBook() {
 }
 
 
+assignroom();
 showBook();

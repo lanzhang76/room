@@ -5,6 +5,7 @@ const io = require('socket.io')(http, {
     pingInterval: 600000, // server check if it's resting after 10 mins
     pingTimeout: 60000 // server rests after 1 minute of no activity
 });
+const cookie = require('cookie');
 
 // Server Components
 var getID = require('./components/uniqueID');
@@ -21,13 +22,16 @@ app.get('/', function (req, res) {
 });
 
 app.get('/projects', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/public/projects.html');
 });
 
-app.get('/publications', function (req, res) {
-    res.sendfile(__dirname + '/index.html');
+app.get('/publication', function (req, res) {
+    res.sendfile(__dirname + '/public/publication.html');
 });
 
+app.get('/livestream', function (req, res) {
+    res.sendfile(__dirname + '/public/livestream.html');
+});
 
 
 
@@ -35,25 +39,21 @@ app.get('/publications', function (req, res) {
 
 // Global variables
 var totalVisitor = 0
-var currentVisitors = []
+var users = {}
 
 // reg io connection:
 io.of('/').on('connection', function (socket) {
-    // console.log('a user connected: ' + socket.id);
-
-    // we could also just use io.sockets.clients().length for totalVisitors
 
     var addedUser = false;
     let handshake = socket.handshake;
-    // console.log(handshake.url);
-    var date = new Date();
+    const cookies = cookie.parse(socket.request.headers.cookie || '');
+    const usercode = cookies._xsrf;
+
+
     const user = {
         unique_name: getID.getsID(),
         time: gettime.getDate(handshake.time),
         time_hourminute: gettime.getHourMinute(),
-        url: handshake.url,
-        id: socket.id,
-        ip: handshake.headers.host + " " + handshake.address,
         open_sen: '',
         end_sen: '',
         goodbye: goodbye.goodbye(),
@@ -61,17 +61,35 @@ io.of('/').on('connection', function (socket) {
         countmsg: ''
     }
 
-    // connect + update users
-    socket.on('join', function (data) {
-        if (addedUser) return;
+    if (users[usercode] == undefined) {
+        // temporarily store cookies to decide if it's the same user
+        users[usercode] = user.unique_name;
+        console.log(users)
+    }
 
-        addUser(); // user count
-        addedUser = true;
 
-        user.open_sen = data[0]
-        user.end_sen = data[1]
-        io.sockets.emit('update', { user: user, countmsg: vcount.totalcount(totalVisitor) });
-    });
+    socket.on('room', function (msg) {
+        if (msg == '/projects') {
+            socket.join('projects', function () {
+                io.sockets.emit('roomAssigned', `${users[usercode]} is on projects page.`)
+            })
+        } else if (msg == '/publication') {
+            socket.join('pub', function () {
+                io.sockets.emit('roomAssigned', `${users[usercode]} is on publication page.`)
+            })
+
+        } else if (msg == '/livestream') {
+            socket.join('pub', function () {
+                io.sockets.emit('roomAssigned', `${users[usercode]} is watching livestream.`)
+            })
+
+        } else if (msg == '/') {
+            socket.join('main', function () {
+                var totalVisitor = Object.keys(users).length;
+                io.sockets.emit('roomAssigned', `${users[usercode]} enters the show. ${vcount.totalcount(totalVisitor)}`)
+            })
+        }
+    })
 
     // content view
     socket.on('contentView', (data) => {
@@ -117,6 +135,10 @@ function subUser() {
 
 
 
+// clean users object every other ___ time
+setInterval(function () {
+    users = {}
+}, 60000) // every other minute
 
 
 
