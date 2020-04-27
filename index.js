@@ -62,10 +62,13 @@ io.of('/').on('connection', function (socket) {
     if (users[usercode] == undefined) {
         // temporarily store cookies to decide if it's the same user
         users[usercode] = user.unique_name;
-        console.log(users)
+        console.log(`current visitors: ${Object.values(users)}`)
+        var totalVisitor = Object.keys(users).length;
+        io.sockets.emit('firstentry', `${users[usercode]} enters the show. ${vcount.totalcount(totalVisitor)}`)
+
     }
 
-
+    // assign rooms based on path
     socket.on('room', function (msg) {
         if (msg == '/projects') {
             socket.join('projects', function () {
@@ -83,8 +86,7 @@ io.of('/').on('connection', function (socket) {
 
         } else if (msg == '/') {
             socket.join('main', function () {
-                var totalVisitor = Object.keys(users).length;
-                io.sockets.emit('roomAssigned', `${users[usercode]} enters the show. ${vcount.totalcount(totalVisitor)}`)
+                io.sockets.emit('roomAssigned', `${users[usercode]} is in the main gallery space browsing.`)
             })
         }
     })
@@ -135,8 +137,8 @@ function subUser() {
 
 // clean users object every other ___ time
 setInterval(function () {
-    console.log("cleaned users{}.")
     users = {}
+    console.log("cleaned users{}.")
 }, 60000) // every other minute
 
 

@@ -8,6 +8,9 @@ $('#book_hide').click(() => {
 
 //get room based on url
 function assignroom() {
+    socket.on('firstentry', (msg) => {
+        $('#messages').append($('<span>').text(msg));
+    })
     socket.emit('room', window.location.pathname);
     socket.on('roomAssigned', (msg) => {
         $('#messages').append($('<span>').text(msg));
