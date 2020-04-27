@@ -24,14 +24,21 @@ span{
 }
 
 /* guestbook */
+.main{
+    width: 100%;
+    position: absolute;
+}
+
 .bulletin_board {
+    width: 100%;
+    box-sizing: border-box;
     display: none;
     width: calc(100%-30px);
     padding: 30px;
     background-color:rgba(0,0,0,1.0);
     color: white;
     margin: 0;
-    position: absolute;
+    
     overflow-y: scroll;
 }
 

@@ -22,15 +22,15 @@ app.get('/', function (req, res) {
 });
 
 app.get('/projects', function (req, res) {
-    res.sendFile(__dirname + '/public/projects.html');
+    res.sendFile(__dirname + '/public/mock_subdomains/projects.html');
 });
 
 app.get('/publication', function (req, res) {
-    res.sendfile(__dirname + '/public/publication.html');
+    res.sendfile(__dirname + '/public/mock_subdomains/publication.html');
 });
 
 app.get('/livestream', function (req, res) {
-    res.sendfile(__dirname + '/public/livestream.html');
+    res.sendfile(__dirname + '/public/mock_subdomains/livestream.html');
 });
 
 
@@ -54,8 +54,6 @@ io.of('/').on('connection', function (socket) {
         unique_name: getID.getsID(),
         time: gettime.getDate(handshake.time),
         time_hourminute: gettime.getHourMinute(),
-        open_sen: '',
-        end_sen: '',
         goodbye: goodbye.goodbye(),
         birdOrOwl: gettime.birdOrOwl(),
         countmsg: ''
@@ -137,6 +135,7 @@ function subUser() {
 
 // clean users object every other ___ time
 setInterval(function () {
+    console.log("cleaned users{}.")
     users = {}
 }, 60000) // every other minute
 
