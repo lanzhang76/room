@@ -5,7 +5,7 @@ if(uuid == null){
 }
 var socket = io({ query: { uuid: uuid } });
 
-socket.emit('room', window.location.pathname);
+socket.emit('page', window.location.pathname);
 
 socket.on('update', (msg) => {
     $('#messages').append($('<span>').text(msg)); //append text

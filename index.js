@@ -80,11 +80,11 @@ io.on('connection', function (socket) {
 
     // assign rooms based on path
     socket.on('page', function (msg) {
-        if (msg == 'projects') {
+        if (msg == '/projects') {
             insertLog(`${user.unique_name} is on projects page.`)
-        } else if (msg == 'publication') {
+        } else if (msg == '/publication') {
             insertLog(`${user.unique_name} is on publication page.`)
-        } else if (msg == 'livestream') {
+        } else if (msg == '/livestream') {
             insertLog(`${user.unique_name} is watching livestream.`)
         } else {
             insertLog(`${user.unique_name} is in the main gallery space browsing.`)
