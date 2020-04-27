@@ -5,30 +5,32 @@ const io = require('socket.io')(http, {
     pingInterval: 600000, // server check if it's resting after 10 mins
     pingTimeout: 60000 // server rests after 1 minute of no activity
 });
-// components:
+
+// Server Components
 var getID = require('./components/uniqueID');
 var goodbye = require('./components/goodbye');
 var content = require('./components/contentMSG');
 var gettime = require('./components/gettime');
+var vcount = require('./components/visitorcount');
 
-// static files: css,js
+// Static Files & Routing
 app.use(express.static('public'))
 
-// route to default page
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/home', function (req, res) {
-    res.sendfile(__dirname + '/public/projects.html');
+app.get('/projects', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/publications', function (req, res) {
+    res.sendfile(__dirname + '/index.html');
 });
 
 
-// server listens on:
-var port = process.env.PORT || 5000;
-http.listen(port, function () {
-    console.log('listening on *:5000');
-});
+
+
 
 
 // Global variables
@@ -46,7 +48,6 @@ io.of('/').on('connection', function (socket) {
     // console.log(handshake.url);
     var date = new Date();
     const user = {
-        // unique_name: "Anonymous " + getsUniqueId(),
         unique_name: getID.getsID(),
         time: gettime.getDate(handshake.time),
         time_hourminute: gettime.getHourMinute(),
@@ -56,9 +57,9 @@ io.of('/').on('connection', function (socket) {
         open_sen: '',
         end_sen: '',
         goodbye: goodbye.goodbye(),
-        birdOrOwl: gettime.birdOrOwl()
+        birdOrOwl: gettime.birdOrOwl(),
+        countmsg: ''
     }
-
 
     // connect + update users
     socket.on('join', function (data) {
@@ -69,7 +70,7 @@ io.of('/').on('connection', function (socket) {
 
         user.open_sen = data[0]
         user.end_sen = data[1]
-        io.sockets.emit('update', { user: user, connections: totalVisitor });
+        io.sockets.emit('update', { user: user, countmsg: vcount.totalcount(totalVisitor) });
     });
 
     // content view
@@ -104,8 +105,7 @@ io.of('/').on('connection', function (socket) {
 
 
 
-
-// some methods:
+// Some methods:
 function addUser() {
     totalVisitor++;
 }
@@ -115,3 +115,13 @@ function subUser() {
 }
 
 
+
+
+
+
+
+// Server listens on:
+var port = process.env.PORT || 5000;
+http.listen(port, function () {
+    console.log('listening on *:5000');
+});

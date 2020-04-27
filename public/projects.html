@@ -3,41 +3,47 @@
 <head>
     <title>DT Guestbook</title>
     <link rel="stylesheet" href="/css/styles.css">
-    <!-- <script src="https://code.jquery.com/jquery-1.11.1.js"></script> -->
     <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
+
+    <!-- buttons -->
     <div class="icon">
-        <a href="/"><button id="homepage">Go back to Home Page</button></a>
-        <button id="book_hide" value="Hide">Hide</button>
-    </div>
-    <div class="bulletin_board">
-        <p id="intro">
-            Welcome, friend!
-            <!-- You are looking at the official Guestbook of Hindsight. We are at a time when gallery
-            spaces have closed, schools have moved online, and our thesis festival has gone virtual. As the virtual
-            becomes the new normal, we created this experimental component for the site to celebrate our collective
-            participation and distant togetherness. Every online visitor leaves a footprint on our Hindsight
-            guestbook–an ongoing, infinite-scroll, generative story that documents the people, the online activities,
-            and the work in our show. We hope this can connect us in a unique way and we hope you are excited to be part
-            of this experience. You can also opt out by clicking this <b>button</b>. -->
-        </p>
-        <br>
-        <p id="messages"></p>
-    </div <canvas id="canvas" width="2000" height="1000"></canvas>
-
-    <div id="backdrop">
-        <img src="assets/hindsight_poster_round2-02.jpg">
+        <a href="/"><button id="homepage">←</button></a>
+        <button id="book_hide" value="Hide">✕</button>
     </div>
 
+    <!-- the actual guestbook display -->
+    <div class="main">
+        <div class="bulletin_board">
+            <p id="intro">
+                Welcome, friend!
+                <!-- You are looking at the official Guestbook of Hindsight. We are at a time when gallery
+                spaces have closed, schools have moved online, and our thesis festival has gone virtual. As the virtual
+                becomes the new normal, we created this experimental component for the site to celebrate our collective
+                participation and distant togetherness. Every online visitor leaves a footprint on our Hindsight
+                guestbook–an ongoing, infinite-scroll, generative story that documents the people, the online activities,
+                and the work in our show. We hope this can connect us in a unique way and we hope you are excited to be part
+                of this experience. You can also opt out by clicking this <b>button</b>. -->
+            </p>
+            <br>
+            <p id="messages"></p>
+        </div>
+    </div>
 
+    <!-- a MC portal for making annoucement later -->
     <div id="guestbook-admin">
         <textarea name="" id="admin-msg" cols="30" rows="10"></textarea>
         <div id="admin-buttons">
             <button id="admin-button">submit</button>
             <button id="admin-exit">exit</button>
         </div>
+    </div>
+
+    <!-- placeholder for the background -->
+    <div id="backdrop">
+        <img src="assets/hindsight_poster_round2-02.jpg">
     </div>
 
     <script src="js/jquery.js"></script>

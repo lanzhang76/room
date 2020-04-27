@@ -9,7 +9,7 @@ exports.getHourMinute = () => {
     var currentHour = new Date().getHours();
     var currentMin = new Date().getMinutes();
     var m = currentMin >= 12 ? 'pm' : 'am'
-    var timestamp = `${currentHour}:${currentMin}${m}. `
+    var timestamp = `${currentHour}:${currentMin}${m}(local time)`
     return timestamp
 }
 
