@@ -71,23 +71,13 @@ io.of('/').on('connection', function (socket) {
     // assign rooms based on path
     socket.on('room', function (msg) {
         if (msg == '/projects') {
-            socket.join('projects', function () {
-                io.sockets.emit('roomAssigned', `${users[usercode]} is on projects page.`)
-            })
+            io.sockets.emit('roomAssigned', `${users[usercode]} is on projects page.`)
         } else if (msg == '/publication') {
-            socket.join('pub', function () {
-                io.sockets.emit('roomAssigned', `${users[usercode]} is on publication page.`)
-            })
-
+            io.sockets.emit('roomAssigned', `${users[usercode]} is on publication page.`)
         } else if (msg == '/livestream') {
-            socket.join('pub', function () {
-                io.sockets.emit('roomAssigned', `${users[usercode]} is watching livestream.`)
-            })
-
+            io.sockets.emit('roomAssigned', `${users[usercode]} is watching livestream.`)
         } else if (msg == '/') {
-            socket.join('main', function () {
-                io.sockets.emit('roomAssigned', `${users[usercode]} is in the main gallery space browsing.`)
-            })
+            io.sockets.emit('roomAssigned', `${users[usercode]} is in the main gallery space browsing.`)
         }
     })
 
