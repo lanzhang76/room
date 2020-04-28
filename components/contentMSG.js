@@ -6,6 +6,6 @@ exports.content = (user, content) => {
     var project = content.project;
     var url = content.url;
 
-    var msg = `<span>${user} is viewing</span> <a href="${url}">${project}</a> <span>by ${student}.</span>`
+    var msg = `<p>${user} is viewing <a href="${url}">${project}</a> by ${student}.</p>`
     return msg
 }

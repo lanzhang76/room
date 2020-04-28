@@ -4,13 +4,13 @@ const express = require('express');
 const socketIO = require('socket.io');
 
 // Databse
-// const {
-//     Pool
-// } = require('pg');
-// const pool = new Pool({
-//     connectionString: process.env.DATABASE_URL, // || 'postgresql://postgres:password@localhost:5432/postgres',
-//     ssl: process.env.DATABASE_URL ? true : false
-// });
+const {
+    Pool
+} = require('pg');
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL || 'postgresql://postgres:password@localhost:5432/postgres',
+    ssl: process.env.DATABASE_URL ? true : false
+});
 
 // Server Components
 var getID = require('./components/uniqueID');
@@ -118,28 +118,37 @@ io.on('connection', function (socket) {
         insertLog(data)
     })
 
+    socket.on('query-log', (offset) => {
+        queryLog(10, offset);
+    })
+
 });
-
-// Some methods:
-function addUser() {
-    totalVisitor++;
-}
-
-function subUser() {
-    totalVisitor--;
-}
 
 function insertLog(data) {
     // Send log to databse
-    // pool.query(
-    //     'INSERT into log (time, text) VALUES($1, $2) RETURNING text',
-    //     [new Date(), data],
-    //     function (err, result) {
-    //         if (err) {
-    //             console.log(err);
-    //         } else {
-    //             console.log(result.rows[0].text);
-    //         }
-    //     });
+    pool.query(
+        'INSERT into log (time, text) VALUES($1, $2) RETURNING text',
+        [new Date(), data],
+        function (err, result) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(result.rows[0].text);
+            }
+        });
     io.sockets.emit('update', data);
+}
+
+function queryLog(num, offset) {
+    // Query log from databse
+    pool.query(
+        `SELECT text FROM log ORDER BY time DESC LIMIT ${num} OFFSET ${offset}`,
+        function (err, result) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(result.rows);
+                io.sockets.emit('requested', result.rows);
+            }
+        });
 }
