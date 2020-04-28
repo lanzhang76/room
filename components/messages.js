@@ -26,7 +26,7 @@ exports.browse = function (content_type) {
   let verb;
   switch (content_type) {
     case 'exhibition':
-      verb = rand.rand(['browses the', 'browses the']);
+      verb = rand.rand(['browses the', 'checks out the']);
       break;
     case 'publication':
       verb = rand.rand(['browses the', 'opens the']);
