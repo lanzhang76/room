@@ -62,16 +62,15 @@ exports.view = function (content_id, content_url, content_type, author_id) {
 };
 
 // Num users - triggers/thresholds tbd
-// TODO: should the trigger be inside or outside the function?
+// TODO: should the trigger logic be inside or outside the function?
 exports.currentCount = function (num_users) {
   let message = '';
+  let pretext = '';
+  if (num_users === 10) {
+    pretext = "Wow! It's getting busy. ";
+  }
   if (num_users > 5) {
-    message = rand.rand([
-      `${num_users} people gather at Hindsight 2020.`,
-      `There are ${num_users} people at the show.`,
-    ]);
-  } else if (num_users > 10) {
-    `Wow! It's getting busy. There are ${num_users} people at the show.`;
+    message = `${pretext} ${message}`;
   }
   return `<span>${message}</span>`;
 };
