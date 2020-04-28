@@ -3,7 +3,7 @@ $(".projectLink").click((e) => {
     var content = {
         name: e.target.getAttribute("studentName"),
         project: e.target.getAttribute("projectName"),
-        type: e.target.getAttribute("pub"),
+        type: e.target.getAttribute("type"),
         url: e.target.getAttribute('href')
     }
     socket.emit("contentView", content);

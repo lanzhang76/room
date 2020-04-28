@@ -17,22 +17,16 @@ var vcount = require('./components/visitorcount');
 
 // Static Files & Routing
 app.use(express.static('public'))
-
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
-});
-
-app.get('/projects', function (req, res) {
-    res.sendFile(__dirname + '/public/mock_subdomains/projects.html');
-});
-
-app.get('/publication', function (req, res) {
-    res.sendfile(__dirname + '/public/mock_subdomains/publication.html');
-});
-
-app.get('/livestream', function (req, res) {
-    res.sendfile(__dirname + '/public/mock_subdomains/livestream.html');
-});
+    .get('/', function (req, res) {
+        res.sendFile(__dirname + '/index.html');
+    })
+    .get('/projects', function (req, res) {
+        res.sendFile(__dirname + '/public/mock_subdomains/projects.html');
+    }).get('/publication', function (req, res) {
+        res.sendfile(__dirname + '/public/mock_subdomains/publication.html');
+    }).get('/livestream', function (req, res) {
+        res.sendfile(__dirname + '/public/mock_subdomains/livestream.html');
+    });
 
 
 
@@ -90,9 +84,7 @@ io.of('/').on('connection', function (socket) {
 
     // disconenct
     socket.on('disconnect', function () {
-        if (addedUser) {
-            io.sockets.emit('update', `${user.unique_name} left the show, ${user.goodbye}`)
-        }
+        io.sockets.emit('update', `${user.unique_name} left the show, ${user.goodbye}`)
     });
 
     // ping timerout
