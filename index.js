@@ -142,17 +142,6 @@ function insertLog(data) {
     io.sockets.emit('update', data);
 }
 
-
-
-
-// clean users object every other ___ time
-setInterval(function () {
-    users = {}
-    console.log("cleaned users{}.")
-}, 60000) // every other minute
-
-
-
 // Server listens on:
 var port = process.env.PORT || 5000;
 http.listen(port, function () {
