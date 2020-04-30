@@ -6,19 +6,19 @@ if (uuid == null) {
 var socket = io({ query: { uuid: uuid } });
 
 contentView();
-socket.emit('query-log', 0);
 socket.emit('page', window.location.pathname);
-
-socket.on('update', (msg) => {
-    parseMsgAfter(msg);
-    $("#bulletin_board").animate({ scrollTop: $("#bulletin_board").prop('scrollHeight') }, 300, 'linear');
-})
+socket.emit('query-log', 0);
 
 socket.on("requested", (msg) => {
     msg.forEach(element => {
         parseMsgBefore(element);
     });
     $("#bulletin_board").animate({ scrollTop: $("#bulletin_board").prop('scrollHeight') }, 300, 'linear');
+    // Start listening to update only after received initial query
+    socket.on('update', (msg) => {
+        parseMsgAfter(msg);
+        $("#bulletin_board").animate({ scrollTop: $("#bulletin_board").prop('scrollHeight') }, 300, 'linear');
+    })
 });
 
 var offset = 10;
@@ -35,7 +35,6 @@ function contentView() {
         projectdiv.forEach(function (item) {
             project.push(item.getAttribute('data-value'));
         })
-        console.log(window.location.pathname)
         project.push(window.location.pathname);
         socket.emit("contentView", project);
     }
@@ -46,12 +45,11 @@ function parseMsgBefore(msg){
     if (msg.name == null) {
         $('#messages').prepend($('<p>').text(msg.sen)); //append text
     } else {
-        console.log(msg)
-        var url = `${window.location.hostname}:5000${msg.path}`
+        var url = `${msg.path}`;
         // var url = `${window.location.hostname}${msg.path}`
         console.log(url);
-        var sent = `<a href=${url}><span>${msg.name}</span></a>`
-        var output = `<p>${msg.sen.replace(msg.name, sent)}</p>`
+        var sent = `<a href=${url}><span>${msg.name}</span></a>`;
+        var output = `<p>${msg.sen.replace(msg.name, sent)}</p>`;
         $('#messages').prepend(output);
     }
 }
@@ -61,11 +59,11 @@ function parseMsgAfter(msg){
     if (msg.name == null) {
         $('#messages').append($('<p>').text(msg.sen)); //append text
     } else {
-        console.log(msg)
-        var url = `${window.location.hostname}:5000${msg.path}`
+        var url = `${msg.path}`;
+        // var url = `${window.location.hostname}:5000${msg.path}`
         console.log(url);
-        var sent = `<a href=${url}><span>${msg.name}</span></a>`
-        var output = `<p>${msg.sen.replace(msg.name, sent)}</p>`
+        var sent = `<a href=${url}><span>${msg.name}</span></a>`;
+        var output = `<p>${msg.sen.replace(msg.name, sent)}</p>`;
         $('#messages').append(output);
     }
 }
