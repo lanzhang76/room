@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const app = require('express')();
 const http = require('http').createServer(app);
@@ -5,9 +7,15 @@ const io = require('socket.io')(http, {
     pingInterval: 600000, // server check if it's resting after 10 mins
     pingTimeout: 60000 // server rests after 1 minute of no activity
 });
-const cookie = require('cookie');
-const path = require('path');
 
+// Databse
+// const {
+//     Pool
+// } = require('pg');
+// const pool = new Pool({
+//     connectionString: process.env.DATABASE_URL || 'postgresql://postgres:password@localhost:5432/postgres',
+//     ssl: process.env.DATABASE_URL ? true : false
+// });
 
 // Server Components
 var getID = require('./components/uniqueID');
@@ -25,57 +33,56 @@ app.get('/', function (req, res) {
 }).get('/projects', function (req, res) {
     res.sendFile(__dirname + '/public/mock_subdomains/projects.html');
 }).get('/publication', function (req, res) {
-    res.sendfile(__dirname + '/public/mock_subdomains/publication.html');
+    res.sendFile(__dirname + '/public/mock_subdomains/publication.html');
 }).get('/livestream', function (req, res) {
-    res.sendfile(__dirname + '/public/mock_subdomains/livestream.html');
+    res.sendFile(__dirname + '/public/mock_subdomains/livestream.html');
 }).get('/fakeproject', function (req, res) {
-    res.sendfile(__dirname + '/public/mock_subdomains/fakeproject.html')
+    res.sendFile(__dirname + '/public/mock_subdomains/fakeproject.html')
 });
-
-
-
 
 // Global variables
 var totalVisitor = 0
 var users = {}
 
 // reg io connection:
-io.of('/').on('connection', function (socket) {
-
-    var addedUser = false;
-    let handshake = socket.handshake;
-    const cookies = cookie.parse(socket.request.headers.cookie || '');
-    const usercode = cookies._xsrf;
-
-
-    const user = {
-        unique_name: getID.getsID(),
-        time: gettime.getDate(handshake.time),
-        time_hourminute: gettime.getHourMinute(),
-        goodbye: goodbye.goodbye(),
-        birdOrOwl: gettime.birdOrOwl(),
-        countmsg: ''
-    }
+io.on('connection', function (socket) {
+    const handshake = socket.handshake;
+    const usercode = handshake.query.uuid;
+    let user;
 
     if (users[usercode] == undefined) {
         // temporarily store cookies to decide if it's the same user
-        users[usercode] = user.unique_name;
-        console.log(`current visitors: ${Object.values(users)}`)
+        user = {
+            unique_name: getID.getsID(),
+            time: gettime.getDate(handshake.time),
+            time_hourminute: gettime.getHourMinute(),
+            goodbye: goodbye.goodbye(),
+            birdOrOwl: gettime.birdOrOwl(),
+            countmsg: '',
+            connection: 1,
+            timeout: null,
+        };
+        users[usercode] = user;
         var totalVisitor = Object.keys(users).length;
-        insertLog(`${users[usercode]} enters the show. ${vcount.totalcount(totalVisitor)}`)
+        insertLog(`${user.unique_name} enters the show. ${vcount.totalcount(totalVisitor)}`)
+    } else {
+        users[usercode].connection++;
+        clearTimeout(users[usercode].timeout);
+        user = users[usercode];
     }
 
+    console.log(`current visitors: ${user.unique_name}`)
 
     // assign rooms based on path
-    socket.on('room', function (msg) {
+    socket.on('page', function (msg) {
         if (msg == '/projects') {
-            insertLog({ sen: `${users[usercode]} is on projects page.` })
+            insertLog({ sen: `${user.unique_name} is on projects page.` })
         } else if (msg == '/publication') {
-            insertLog({ sen: `${users[usercode]} is on publication page.` })
+            insertLog({ sen: `${user.unique_name} is on publication page.` })
         } else if (msg == '/livestream') {
-            insertLog({ sen: `${users[usercode]} is watching livestream.` })
+            insertLog({ sen: `${user.unique_name} is watching livestream.` })
         } else if (msg == '/') {
-            insertLog({ sen: `${users[usercode]} is in the main gallery space browsing.` })
+            insertLog({ sen: `${user.unique_name} is in the main gallery space browsing.` })
         }
     })
 
@@ -94,7 +101,13 @@ io.of('/').on('connection', function (socket) {
 
     // disconenct
     socket.on('disconnect', function () {
-        insertLog({ sen: `${user.unique_name} left the show, ${user.goodbye}` });
+        users[usercode].connection--;
+        if (users[usercode].connection == 0) {
+            users[usercode].timeout = setTimeout(() => {
+                insertLog({ sen: `${user.unique_name} left the show, ${user.goodbye}` });
+                delete users[usercode];
+            }, 10000, user.unique_name); // 10sec delay for disconnecting client
+        }
     });
 
     // ping timerout
@@ -108,27 +121,25 @@ io.of('/').on('connection', function (socket) {
         insertLog({ sen: data });
     })
 
-});
+    socket.on('query-log', (offset) => {
+        queryLog(10, offset, socket.id);
+    })
 
+});
 
 function insertLog(data) {
     // Send log to databse
-    // data.sen query
-    // ****
-    // 
+    // pool.query(
+    //     'INSERT into log (time, sen, name, path) VALUES($1, $2, $3, $4) RETURNING sen, name, path',
+    //     [new Date(), data.sen, data.name, data.path],
+    //     function (err, result) {
+    //         if (err) {
+    //             console.log(err);
+    //         } else {
+    //             console.log(result.rows[0]);
+    //         }
+    //     });
     io.sockets.emit('update', data);
-
-}
-
-
-
-// Some methods:
-function addUser() {
-    totalVisitor++;
-}
-
-function subUser() {
-    totalVisitor--;
 }
 
 
@@ -147,3 +158,17 @@ var port = process.env.PORT || 5000;
 http.listen(port, function () {
     console.log('listening on *:5000');
 })
+
+function queryLog(num, offset, socket) {
+    // Query log from databse
+    // pool.query(
+    //     `SELECT sen, name, path  FROM log ORDER BY time DESC LIMIT ${num} OFFSET ${offset}`,
+    //     function (err, result) {
+    //         if (err) {
+    //             console.log(err);
+    //         } else {
+    //             console.log(result.rows);
+    //             io.sockets.to(socket).emit('requested', result.rows);
+    //         }
+    //     });
+}

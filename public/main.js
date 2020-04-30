@@ -1,8 +1,13 @@
-var socket = io();
+var uuid = localStorage.getItem('mfadtuuid');
+if(uuid == null){
+    uuid = Math.random().toString(24) + new Date();
+    localStorage.setItem('mfadtuuid', uuid);
+}
+var socket = io({ query: { uuid: uuid } });
 
-socket.emit('room', window.location.pathname);
+socket.emit('query-log', 0);
+socket.emit('page', window.location.pathname);
 contentView();
-
 
 socket.on('update', (msg) => {
     if (Object.keys(msg).length == 1) {
@@ -17,6 +22,17 @@ socket.on('update', (msg) => {
     }
 })
 
+socket.on("requested", (msg) => {
+    msg.forEach(element => {
+        $('#messages').prepend($('<p>').text(element.text)); //append dom element
+    });
+});
+
+var offset = 10;
+$('#load').click(()=>{
+    socket.emit('query-log', offset);
+    offset = offset + 10;
+})
 
 
 function contentView() {
