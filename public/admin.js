@@ -29,6 +29,6 @@ $('#admin-exit').click((e) => {
     console.log("hide")
 })
 
-socket.on('mc', function (msg) {
-    $('#messages').append($('<span>').text(` ${msg}`));
-});
+// socket.on('mc', function (msg) {
+//     $('#messages').append($('<span>').text(` ${msg}`));
+// });

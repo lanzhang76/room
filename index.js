@@ -6,6 +6,7 @@ const io = require('socket.io')(http, {
     pingTimeout: 60000 // server rests after 1 minute of no activity
 });
 const cookie = require('cookie');
+const path = require('path');
 
 
 // Server Components
@@ -16,17 +17,20 @@ var gettime = require('./components/gettime');
 var vcount = require('./components/visitorcount');
 
 // Static Files & Routing
-app.use(express.static('public'))
-    .get('/', function (req, res) {
-        res.sendFile(__dirname + '/index.html');
-    })
-    .get('/projects', function (req, res) {
-        res.sendFile(__dirname + '/public/mock_subdomains/projects.html');
-    }).get('/publication', function (req, res) {
-        res.sendfile(__dirname + '/public/mock_subdomains/publication.html');
-    }).get('/livestream', function (req, res) {
-        res.sendfile(__dirname + '/public/mock_subdomains/livestream.html');
-    });
+app.use(express.static(__dirname + '/public'));
+// app.use("/public", express.static(path.join(__dirname, '/public')));
+
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
+}).get('/projects', function (req, res) {
+    res.sendFile(__dirname + '/public/mock_subdomains/projects.html');
+}).get('/publication', function (req, res) {
+    res.sendfile(__dirname + '/public/mock_subdomains/publication.html');
+}).get('/livestream', function (req, res) {
+    res.sendfile(__dirname + '/public/mock_subdomains/livestream.html');
+}).get('/fakeproject', function (req, res) {
+    res.sendfile(__dirname + '/public/mock_subdomains/fakeproject.html')
+});
 
 
 
@@ -58,48 +62,63 @@ io.of('/').on('connection', function (socket) {
         users[usercode] = user.unique_name;
         console.log(`current visitors: ${Object.values(users)}`)
         var totalVisitor = Object.keys(users).length;
-        io.sockets.emit('update', `${users[usercode]} enters the show. ${vcount.totalcount(totalVisitor)}`)
+        insertLog(`${users[usercode]} enters the show. ${vcount.totalcount(totalVisitor)}`)
     }
 
 
     // assign rooms based on path
     socket.on('room', function (msg) {
         if (msg == '/projects') {
-            io.sockets.emit('update', `${users[usercode]} is on projects page.`)
+            insertLog({ sen: `${users[usercode]} is on projects page.` })
         } else if (msg == '/publication') {
-            io.sockets.emit('update', `${users[usercode]} is on publication page.`)
+            insertLog({ sen: `${users[usercode]} is on publication page.` })
         } else if (msg == '/livestream') {
-            io.sockets.emit('update', `${users[usercode]} is watching livestream.`)
+            insertLog({ sen: `${users[usercode]} is watching livestream.` })
         } else if (msg == '/') {
-            io.sockets.emit('update', `${users[usercode]} is in the main gallery space browsing.`)
+            insertLog({ sen: `${users[usercode]} is in the main gallery space browsing.` })
         }
     })
 
     // content view
     socket.on('contentView', (data) => {
+        // data[name,student,path]
+        console.log(data)
         var contentmsg = content.content(user.unique_name, data);
-        io.sockets.emit('contentBroadcast', contentmsg);
+        var contentlog = {
+            sen: contentmsg,
+            name: data[0],
+            path: data[2]
+        }
+        io.sockets.emit('update', contentlog);
     })
-
 
     // disconenct
     socket.on('disconnect', function () {
-        io.sockets.emit('update', `${user.unique_name} left the show, ${user.goodbye}`)
+        insertLog({ sen: `${user.unique_name} left the show, ${user.goodbye}` });
     });
 
     // ping timerout
     socket.on('ping', () => {
         console.log("server is sleeping")
-        io.sockets.emit('update', "The server is falling asleep as no one is watching.");
+        insertLog({ sen: "The server is falling asleep as no one is watching." });
     });
 
     //admin broadcast
     socket.on('admin-msg', (data) => {
-        io.sockets.emit('update', data);
+        insertLog({ sen: data });
     })
 
 });
 
+
+function insertLog(data) {
+    // Send log to databse
+    // data.sen query
+    // ****
+    // 
+    io.sockets.emit('update', data);
+
+}
 
 
 
@@ -127,4 +146,4 @@ setInterval(function () {
 var port = process.env.PORT || 5000;
 http.listen(port, function () {
     console.log('listening on *:5000');
-});
+})
