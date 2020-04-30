@@ -10,13 +10,13 @@ socket.emit('query-log', 0);
 socket.emit('page', window.location.pathname);
 
 socket.on('update', (msg) => {
-    parseLink(msg);
+    parseMsgAfter(msg);
     $("#bulletin_board").animate({ scrollTop: $("#bulletin_board").prop('scrollHeight') }, 300, 'linear');
 })
 
 socket.on("requested", (msg) => {
     msg.forEach(element => {
-        parseLink(msg);
+        parseMsgBefore(element);
     });
     $("#bulletin_board").animate({ scrollTop: $("#bulletin_board").prop('scrollHeight') }, 300, 'linear');
 });
@@ -41,8 +41,24 @@ function contentView() {
     }
 }
 
-function parseLink(){
-    if (Object.keys(msg).length == 1) {
+function parseMsgBefore(msg){
+    console.log(msg);
+    if (msg.name == null) {
+        $('#messages').prepend($('<p>').text(msg.sen)); //append text
+    } else {
+        console.log(msg)
+        var url = `${window.location.hostname}:5000${msg.path}`
+        // var url = `${window.location.hostname}${msg.path}`
+        console.log(url);
+        var sent = `<a href=${url}><span>${msg.name}</span></a>`
+        var output = `<p>${msg.sen.replace(msg.name, sent)}</p>`
+        $('#messages').prepend(output);
+    }
+}
+
+function parseMsgAfter(msg){
+    console.log(msg);
+    if (msg.name == null) {
         $('#messages').append($('<p>').text(msg.sen)); //append text
     } else {
         console.log(msg)
