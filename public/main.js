@@ -3,22 +3,34 @@ if (uuid == null) {
     uuid = Math.random().toString(24) + new Date();
     localStorage.setItem('mfadtuuid', uuid);
 }
-var socket = io({ query: { uuid: uuid } });
+var socket = io({
+    query: {
+        uuid: uuid
+    }
+});
 
 contentView();
 socket.emit('page', window.location.pathname);
 socket.emit('query-log', 0);
+var requested = false;
 
 socket.on("requested", (msg) => {
     msg.forEach(element => {
         parseMsgBefore(element);
     });
-    $("#bulletin_board").animate({ scrollTop: $("#bulletin_board").prop('scrollHeight') }, 300, 'linear');
+    $("#bulletin_board").animate({
+        scrollTop: $("#bulletin_board").prop('scrollHeight')
+    }, 300, 'linear');
     // Start listening to update only after received initial query
-    socket.on('update', (msg) => {
-        parseMsgAfter(msg);
-        $("#bulletin_board").animate({ scrollTop: $("#bulletin_board").prop('scrollHeight') }, 300, 'linear');
-    })
+    if (!requested) {
+        requested = true;
+        socket.on('update', (msg) => {
+            parseMsgAfter(msg);
+            $("#bulletin_board").animate({
+                scrollTop: $("#bulletin_board").prop('scrollHeight')
+            }, 300, 'linear');
+        })
+    }
 });
 
 var offset = 10;
@@ -40,7 +52,7 @@ function contentView() {
     }
 }
 
-function parseMsgBefore(msg){
+function parseMsgBefore(msg) {
     console.log(msg);
     if (msg.name == null) {
         $('#messages').prepend($('<p>').text(msg.sen)); //append text
@@ -54,7 +66,7 @@ function parseMsgBefore(msg){
     }
 }
 
-function parseMsgAfter(msg){
+function parseMsgAfter(msg) {
     console.log(msg);
     if (msg.name == null) {
         $('#messages').append($('<p>').text(msg.sen)); //append text
