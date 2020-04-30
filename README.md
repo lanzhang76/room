@@ -13,11 +13,15 @@ $ node index.js
 [main.js](https://desolate-island-46205.herokuapp.com/main.js)
 (needs to be updated with the correct endpoint)
 
-<hr>
-
-#### Master Branch Update log:
+#### Master Branch Update log
 - <b>Apr6</b> User IP, server and client setup
 - <b>Apr11</b> Opt-in buttons, user object, client connects/disconnects
 - <b>Apr26</b>  Set up new heroku server, database
 - <b>Apr27</b>  Merge emit to one update function
 - <b>Apr30</b>  Add front-end processing to embed url with project names
+
+#### TODO
+1. add hindsight-metadata tags on all project/livestream/publication page
+2. add user authentication 
+3. reversed-infinite scroll text loading
+4. upgrade server & storage
