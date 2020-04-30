@@ -64,7 +64,7 @@ io.on('connection', function (socket) {
         };
         users[usercode] = user;
         var totalVisitor = Object.keys(users).length;
-        insertLog(`${user.unique_name} enters the show. ${vcount.totalcount(totalVisitor)}`)
+        insertLog({ sen: `${user.unique_name} enters the show. ${vcount.totalcount(totalVisitor)}` })
     } else {
         users[usercode].connection++;
         clearTimeout(users[usercode].timeout);
