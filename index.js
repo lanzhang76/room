@@ -89,7 +89,7 @@ io.of('/').on('connection', function (socket) {
             name: data[0],
             path: data[2]
         }
-        io.sockets.emit('update', contentlog);
+        insertLog(contentlog);
     })
 
     // disconenct
@@ -117,7 +117,6 @@ function insertLog(data) {
     // ****
     // 
     io.sockets.emit('update', data);
-
 }
 
 
