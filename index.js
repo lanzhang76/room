@@ -139,6 +139,7 @@ function insertLog(data) {
     //             console.log(result.rows[0]);
     //         }
     //     });
+    // io.sockets.to(socket).emit('requested', result.rows);
     io.sockets.emit('update', data);
 }
 
