@@ -34,7 +34,6 @@ socket.emit('page', window.location.pathname);
 // });
 
 
-
 // var offset = 10;
 // $('#load').click(() => {
 //     socket.emit('query-log', offset);
@@ -68,7 +67,7 @@ function parseMsgBefore(msg) {
     } else {
         var url = `${msg.path}`;
         var sent = `<a href=${url}><span>${msg.name}</span></a>`;
-        var output = `<p>${msg.sen.replace(msg.name, sent)}</p>`;
+        var output = `<span>${msg.sen.replace(msg.name, sent)}</span>`;
         $('.messages').prepend(output);
     }
 }
@@ -79,6 +78,7 @@ function parseMsgAfter(msg) {
     } else {
         var url = `${msg.path}`;
         var sent = `<a href=${url}><span>${msg.name}</span></a>`;
+        var output = `<span>${msg.sen.replace(msg.name, sent)}</span>`;
         $('.messages').append(output);
     }
 }

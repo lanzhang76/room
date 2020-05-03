@@ -23,6 +23,8 @@ var goodbye = require('./components/goodbye');
 var content = require('./components/contentMSG');
 var gettime = require('./components/gettime');
 var vcount = require('./components/visitorcount');
+var arrival = require('./components/arrival');
+var room = require('./components/room');
 
 // Static Files & Routing
 app.use(express.static(__dirname + '/public'));
@@ -64,7 +66,7 @@ io.on('connection', function (socket) {
         };
         users[usercode] = user;
         var totalVisitor = Object.keys(users).length;
-        insertLog({ sen: `${user.unique_name} enters the show. ${vcount.totalcount(totalVisitor)}` })
+        insertLog({ sen: arrival.announceArrival(user.unique_name) })
     } else {
         users[usercode].connection++;
         clearTimeout(users[usercode].timeout);
@@ -76,13 +78,13 @@ io.on('connection', function (socket) {
     // assign rooms based on path
     socket.on('page', function (msg) {
         if (msg == '/projects') {
-            insertLog({ sen: `${user.unique_name} is on projects page.` })
+            insertLog({ sen: room.exhibition(user.unique_name) })
         } else if (msg == '/publication') {
-            insertLog({ sen: `${user.unique_name} is on publication page.` })
+            insertLog({ sen: room.publication(user.unique_name) })
         } else if (msg == '/livestream') {
-            insertLog({ sen: `${user.unique_name} is watching livestream.` })
+            insertLog({ sen: room.livestream(user.unique_name) })
         } else if (msg == '/') {
-            insertLog({ sen: `${user.unique_name} is in the main gallery space browsing.` })
+            insertLog({ sen: room.exhibition(user.unique_name) })
         }
     })
 
