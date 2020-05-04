@@ -1,15 +1,25 @@
+var rand = require('./random');
+
 exports.totalcount = (num) => {
     var count_sent = '';
-    if (num == 1) {
-        count_sent = `There is 1 person in the exhibition right now.`;
-    } else if (num == 5) {
-        count_sent = `There are ${num} people in the exhibition.`;
+    var messages = (num_users) => {
+        var message = rand.rand([
+            `It’s a lively day at Hindsight 2020. ${num_users} at the show!`,
+            `Things are really picking up! ${num_users} gather.`,
+            `Come one, come all! ${num_users} meet up at Hindsight 2020.`,
+            `Friends, families, strangers, neighbors...${num_users} art enthusiasts fill the space.`,
+        ])
+        return messgae
+    }
+
+    if (num == 5) {
+        count_sent = messaged(num);
     } else if (num == 10) {
-        count_sent = `There are ${num} people in the exhibition.`;
+        count_sent = messaged(num);
     } else if (num == 20) {
-        count_sent = `There are ${num} people in the exhibition.`;
+        count_sent = messaged(num);
     } else if (num == 50) {
-        count_sent = `Wow! There are ${num} people in the exhibition.`;
+        count_sent = messaged(num);
     }
     // Should return '' if no special event happens
     return count_sent;

@@ -3,22 +3,23 @@
 const rand = require('./random');
 const user_id_anonym = '&#x2588;&#x2588;&#x2588;&#x2588;';
 
+// MOVING THIS to arrival.js
 // ARRIVE: Guest connects for first time.
-exports.arrive = function () {
-  const message = rand.rand([
-    `Welcome to Hindsight 2020, ${user_id_anonym}!`,
-    `Welcome to the show, ${user_id_anonym}!`,
-    `Welcome, ${user_id_anonym}!`,
-    `Hello, ${user_id_anonym}!`,
-    `Hi, ${user_id_anonym}!`,
-    `Hey, ${user_id_anonym}!`,
-    `Howdy, ${user_id_anonym}!`,
-    `${user_id_anonym} has arrived!`,
-    `Look, it’s ${user_id_anonym}!`,
-    `${user_id_anonym} has joined the show!`,
-  ]);
-  return `<span>${message}</span>`;
-};
+// exports.arrive = function () {
+//   const message = rand.rand([
+//     `Welcome to Hindsight 2020, ${user_id_anonym}!`,
+//     `Welcome to the show, ${user_id_anonym}!`,
+//     `Welcome, ${user_id_anonym}!`,
+//     `Hello, ${user_id_anonym}!`,
+//     `Hi, ${user_id_anonym}!`,
+//     `Hey, ${user_id_anonym}!`,
+//     `Howdy, ${user_id_anonym}!`,
+//     `${user_id_anonym} has arrived!`,
+//     `Look, it’s ${user_id_anonym}!`,
+//     `${user_id_anonym} has joined the show!`,
+//   ]);
+//   return `<span>${message}</span>`;
+// };
 
 // BROWSE: Guest views landing/exhibition/publication/presentation
 // index page.
@@ -76,4 +77,4 @@ exports.currentCount = function (num_users) {
 };
 
 // Time - triggers tbd
-exports.datetime = function (num_users) {};
+exports.datetime = function (num_users) { };

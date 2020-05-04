@@ -24,12 +24,12 @@ var requested = false;
 //     // Start listening to update only after received initial query
 //     if (!requested) {
 //         requested = true;
-        socket.on('update', (msg) => {
-            parseMsgAfter(msg);
-            $("#bulletin_board").animate({
-                scrollTop: $("#bulletin_board").prop('scrollHeight')
-            }, 300, 'linear');
-        })
+socket.on('update', (msg) => {
+    parseMsgAfter(msg);
+    $("#bulletin_board").animate({
+        scrollTop: $("#bulletin_board").prop('scrollHeight')
+    }, 300, 'linear');
+})
 //     }
 // });
 
