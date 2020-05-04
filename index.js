@@ -65,8 +65,9 @@ io.on('connection', function (socket) {
             timeout: null,
         };
         users[usercode] = user;
-        var totalVisitor = Object.keys(users).length;
         insertLog({ sen: arrival.announceArrival(user.unique_name) })
+        var vcountMsg = vcount.totalcount(Object.keys(users).length);
+        if(vcountMsg != '') insertLog({ sen: vcountMsg });
     } else {
         users[usercode].connection++;
         clearTimeout(users[usercode].timeout);
