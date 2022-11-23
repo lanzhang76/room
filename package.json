@@ -6,7 +6,7 @@
         "express": "^4.17.1",
         "ordinal-js": "^1.1.0",
         "pg": "^7.18.2",
-        "socket.io": "^2.3.0"
+        "socket.io": "^2.5.0"
     },
     "engines": {
         "node": "10.15.3"
